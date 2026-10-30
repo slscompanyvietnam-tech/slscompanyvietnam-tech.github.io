@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="assets/favicon.png">
+<title>SLS Văn bản – Hồ sơ</title>
+<meta name="description" content="Phần mềm soạn văn bản đúng thể thức Nghị định 30/2020/NĐ-CP, Hướng dẫn 05-HD/VPTW và lập hồ sơ, nộp lưu. Chạy ngay trên máy, không cần cài đặt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Bố cục: nền trắng sáng, chữ không chân đậm, màu xanh lam lấy từ logo SLS; ảnh phần mềm lớn, sắc nét (chụp 2x) trong khung cửa sổ; nền đầu trang có lưới chấm mờ như giấy kẻ ô. */
+:root{
+  --bg:#f6f8fc;  --paper:#ffffff; --ink:#0d1b33; --muted:#55627a; --line:#e3e8f0; --line2:#cdd6e4;
+  --navy:#1662d4; --navy-2:#0f4fb0; --navy-ink:#ffffff; --navy-soft:#ebf2fe; --sky:#7fb0f5; --hero:#f3f7ff; --dot:rgba(22,98,212,.13);
+  --seal:#b3261e; --seal-soft:#fcebea; --ok:#17784a; --ok-soft:#e5f3eb;
+  --doc:#ffffff; --doc-ink:#111;
+  --shadow-s:0 1px 2px rgba(15,23,34,.06),0 2px 8px rgba(15,23,34,.05);
+  --shadow-l:0 2px 6px rgba(22,98,212,.08),0 30px 70px -10px rgba(13,40,90,.22);
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-disp:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:ui-monospace,"SFMono-Regular",Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e131a; --paper:#151c25; --ink:#e9edf3; --muted:#9ba6b6; --line:#253041; --line2:#33405a;
+  --navy:#6aa8ff; --navy-2:#8dbcff; --navy-ink:#071224; --navy-soft:#16263d; --sky:#7fb0f5; --hero:#0f1825; --dot:rgba(106,168,255,.12);
+  --seal:#f08a80; --seal-soft:#3a2120; --ok:#6cc896; --ok-soft:#173022; --doc:#f3f1ec;
+  --shadow-s:0 1px 2px rgba(0,0,0,.4); --shadow-l:0 24px 60px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e131a; --paper:#151c25; --ink:#e9edf3; --muted:#9ba6b6; --line:#253041; --line2:#33405a;
+  --navy:#6aa8ff; --navy-2:#8dbcff; --navy-ink:#071224; --navy-soft:#16263d; --sky:#7fb0f5; --hero:#0f1825; --dot:rgba(106,168,255,.12);
+  --seal:#f08a80; --seal-soft:#3a2120; --ok:#6cc896; --ok-soft:#173022; --doc:#f3f1ec;
+  --shadow-s:0 1px 2px rgba(0,0,0,.4); --shadow-l:0 24px 60px rgba(0,0,0,.5); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--navy)}
+img{max-width:100%;display:block}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.eyebrow{font:700 12.5px/1.2 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--navy)}
+.h2{font:800 clamp(28px,3.4vw,42px)/1.15 var(--f-disp);letter-spacing:-.025em}
+.sub{color:var(--muted);font-size:17px;max-width:64ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--line2);background:var(--paper);color:var(--ink);padding:12px 20px;border-radius:10px;font:600 15px/1.2 var(--f-body);text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.btn:hover{border-color:var(--navy)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,.tabs button:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:var(--navy-ink)}
+.btn.primary:hover{background:var(--navy-2);border-color:var(--navy-2)}
+.btn.light{background:#fff;border-color:#fff;color:#0f4fb0}
+.btn.light:hover{background:#e8eef7}
+.btn.ghost-d{background:transparent;border-color:rgba(255,255,255,.35);color:#fff}
+.btn.ghost-d:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+.btn.sm{padding:8px 14px;font-size:14px}
+.ico{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- Đầu trang ---- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:24px;height:64px}
+.logo{height:32px;width:auto}
+.logo-dark{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo-light{display:none}:root:not([data-theme="light"]) .logo-dark{display:block}}
+:root[data-theme="dark"] .logo-light{display:none}:root[data-theme="dark"] .logo-dark{display:block}
+.menu{display:flex;gap:2px;margin-left:8px}
+.menu a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14.5px;padding:8px 12px;border-radius:8px}
+.menu a:hover{color:var(--ink);background:var(--bg)}
+.top-cta{margin-left:auto;display:flex;gap:8px}
+@media (max-width:980px){.menu{display:none}}
+@media (max-width:480px){.top-cta .btn:first-child{display:none}}
+
+/* ---- Hero ---- */
+.hero{position:relative;background:var(--hero);color:var(--ink);overflow:hidden;padding-block:72px 64px;border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--dot) 1.2px,transparent 1.3px);background-size:22px 22px;mask-image:radial-gradient(ellipse 80% 70% at 70% 40%,#000 20%,transparent 75%)}
+.hero .wrap{position:relative}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 56px;align-items:end}
+.hero-grid .stage{grid-column:1/-1;margin-top:40px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:var(--paper);color:var(--ink);border-radius:99px;padding:6px 14px 6px 6px;font-size:13px;font-weight:600;box-shadow:var(--shadow-s)}
+.chip i{border-radius:99px;background:var(--navy);color:var(--navy-ink);font:700 11px/1 var(--f-body);font-style:normal;padding:5px 9px}
+.hero h1{font:800 clamp(36px,5.2vw,64px)/1.06 var(--f-disp);letter-spacing:-.035em;margin:22px 0 0}
+.hero h1 span{color:var(--navy)}
+.hero .lead{color:var(--muted);font-size:18px;max-width:52ch;margin-bottom:26px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 28px}
+.specs{display:grid;grid-template-columns:repeat(3,auto);gap:36px;justify-content:start}
+.specs b{display:block;font:800 32px/1 var(--f-disp);letter-spacing:-.02em;color:var(--navy);font-variant-numeric:tabular-nums}
+.specs span{display:block;color:var(--muted);font-size:13.5px;margin-top:6px}
+.stage{position:relative}
+.window{background:var(--paper);border-radius:14px;box-shadow:var(--shadow-l);overflow:hidden;border:1px solid var(--line)}
+.window .bar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--line)}
+.window .bar i{width:10px;height:10px;border-radius:50%;background:var(--line2)}
+.window .bar i:nth-child(1){background:#ff5f57}.window .bar i:nth-child(2){background:#febc2e}.window .bar i:nth-child(3){background:#28c840}
+.window .bar span{margin-left:10px;flex:1;background:var(--paper);border:1px solid var(--line);border-radius:6px;font:12px/1 var(--f-mono);color:var(--muted);padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.window img{width:100%;height:auto}
+.check{position:absolute;right:-24px;bottom:-32px;background:var(--paper);color:var(--ink);border-radius:14px;box-shadow:var(--shadow-l);padding:16px 18px;width:min(290px,72%);border:1px solid var(--line)}
+.check h4{margin:0 0 10px;font-size:13.5px;font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.check h4 em{font-style:normal;color:var(--ok);font-size:12px;background:var(--ok-soft);border-radius:99px;padding:2px 8px}
+.check ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:12.5px}
+.check li{display:flex;justify-content:space-between;gap:10px;color:var(--muted)}
+.check li b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+@media (max-width:980px){.hero-grid{grid-template-columns:1fr}.check{right:12px}}
+@media (max-width:520px){.specs{grid-template-columns:repeat(3,1fr);gap:14px}.specs b{font-size:24px}.check{display:none}}
+
+/* ---- Căn cứ pháp lý ---- */
+.basis{background:var(--paper);border-bottom:1px solid var(--line)}
+.basis .wrap{display:flex;align-items:center;gap:14px 28px;flex-wrap:wrap;padding-block:22px}
+.basis small{font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.basis ul{list-style:none;display:flex;flex-wrap:wrap;gap:10px 26px;margin:0;padding:0}
+.basis li{font:700 14.5px/1.3 var(--f-body);color:var(--ink)}
+.basis li span{display:block;font:500 12px/1.3 var(--f-body);color:var(--muted)}
+
+section.s{padding-block:88px}
+.s-head{display:grid;gap:12px;margin-bottom:44px;max-width:780px}
+.s-head.center{text-align:center;margin-inline:auto;justify-items:center}
+
+/* ---- Trước / sau ---- */
+.compare{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--paper)}
+.compare .row{display:grid;grid-template-columns:1.1fr 1fr 1fr;border-top:1px solid var(--line)}
+.compare .row:first-child{border-top:0;background:var(--bg);font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.compare .row>div{padding:16px 20px;min-width:0}
+.compare .row>div+div{border-left:1px solid var(--line)}
+.compare .task{font-weight:700}
+.compare .before{color:var(--muted)}
+.compare .after{color:var(--ink)}
+.compare .after::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:8px;vertical-align:middle}
+@media (max-width:760px){.compare .row{grid-template-columns:1fr}.compare .row>div+div{border-left:0;padding-top:0}.compare .row:first-child{display:none}.compare .before::before{content:"Thường làm: ";font-weight:600}.compare .after::before{content:none}.compare .after{color:var(--ok);font-weight:600}}
+
+/* ---- Sản phẩm ---- */
+.prodwrap{background:var(--paper);border-block:1px solid var(--line)}
+.tabs{display:inline-flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:36px;flex-wrap:wrap}
+.tabs button{border:0;background:transparent;color:var(--muted);font:600 15px var(--f-body);padding:10px 18px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--paper);color:var(--navy);box-shadow:var(--shadow-s)}
+.pane{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:56px;align-items:start}
+.pane h3{font:800 28px/1.2 var(--f-disp);letter-spacing:-.02em;margin-bottom:10px}
+.pane .sub{font-size:16px}
+.feats{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:18px}
+.feats li{display:grid;grid-template-columns:40px 1fr;gap:14px}
+.feats .ic{width:40px;height:40px;border-radius:10px;background:var(--navy-soft);color:var(--navy);display:grid;place-items:center}
+.feats b{display:block;font-size:15.5px;margin-bottom:2px}
+.feats p{color:var(--muted);font-size:14.5px}
+.pane .window{border-color:var(--line)}
+.pane figure{margin:0;min-width:0}
+.pane figcaption{font-size:13px;color:var(--muted);margin-top:12px}
+@media (max-width:980px){.pane{grid-template-columns:1fr}}
+
+/* ---- Vì sao ---- */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.why div{background:var(--paper);padding:28px;min-width:0}
+.why .ic{color:var(--navy);margin-bottom:14px}
+.why b{display:block;font-size:17px;margin-bottom:6px}
+.why p{color:var(--muted);font-size:15px}
+@media (max-width:900px){.why{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.why{grid-template-columns:1fr}}
+
+/* ---- Quy trình ---- */
+.flow{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:st;position:relative}
+.flow li{counter-increment:st;min-width:0;position:relative;padding-top:58px}
+.flow li::before{content:counter(st,decimal-leading-zero);position:absolute;top:0;left:0;width:44px;height:44px;border-radius:50%;background:var(--paper);border:1.5px solid var(--navy);color:var(--navy);display:grid;place-items:center;font:700 15px var(--f-body);z-index:1}
+.flow li::after{content:"";position:absolute;top:22px;left:44px;right:-20px;height:1.5px;background:var(--line2)}
+.flow li:last-child::after{display:none}
+.flow b{display:block;font:700 19px/1.3 var(--f-disp);margin-bottom:6px}
+.flow p{color:var(--muted);font-size:14.5px}
+.flow .law{display:inline-block;margin-top:12px;font:600 12px/1.4 var(--f-mono);color:var(--navy);background:var(--navy-soft);border-radius:6px;padding:3px 8px}
+@media (max-width:900px){.flow{grid-template-columns:1fr 1fr;row-gap:36px}.flow li:nth-child(2)::after{display:none}}
+@media (max-width:520px){.flow{grid-template-columns:1fr}.flow li::after{display:none}}
+
+/* ---- Bảng giá ---- */
+.pricing{background:var(--paper);border-block:1px solid var(--line)}
+.prices{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.plan{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:30px 28px;display:flex;flex-direction:column;gap:18px;min-width:0;position:relative}
+.plan.best{border:2px solid var(--navy);box-shadow:var(--shadow-l)}
+.plan .ribbon{position:absolute;top:-13px;left:28px;font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px;background:var(--navy);color:var(--navy-ink)}
+.plan h3{font:700 20px/1.25 var(--f-disp)}
+.plan .desc{color:var(--muted);font-size:14.5px;margin-top:-10px}
+.plan .price{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.plan .price small{font-size:14px;font-weight:500;color:var(--muted);letter-spacing:0}
+.plan .was{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin-bottom:-8px}
+.plan .was s{font-variant-numeric:tabular-nums}
+.plan .was em{font-style:normal;font-weight:700;font-size:12px;color:var(--seal);background:var(--seal-soft);border-radius:99px;padding:2px 8px}
+.org .oprice{font-size:24px;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.org .oprice small{font-size:13.5px;font-weight:500;color:var(--muted)}
+.org .oprice s{display:block;font-size:13.5px;font-weight:500;color:var(--muted)}
+.vol{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;margin-top:22px;font-size:14.5px;color:var(--muted)}
+.vol b{color:var(--ink)}
+.disc{display:flex;justify-content:space-between;font-size:14px;color:var(--ok);font-variant-numeric:tabular-nums}
+.disc:empty{display:none}
+.plan ul{margin:0;padding:18px 0 0;border-top:1px solid var(--line);list-style:none;display:grid;gap:10px;font-size:14.5px}
+.plan li{display:grid;grid-template-columns:18px 1fr;gap:10px}
+.plan li svg{width:18px;height:18px;margin-top:3px;stroke:var(--ok);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.plan .btn{margin-top:auto}
+.org{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border:1px dashed var(--line2);border-radius:var(--r);padding:20px 24px;background:var(--bg)}
+.org b{display:block;font-size:16.5px}
+.org p{color:var(--muted);font-size:14.5px}
+@media (max-width:980px){.prices{grid-template-columns:1fr;max-width:520px;margin-inline:auto}}
+
+/* ---- Mua hàng ---- */
+.buy{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start}
+.steps{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:22px;counter-reset:b}
+.steps li{display:grid;grid-template-columns:36px 1fr;gap:14px;counter-increment:b}
+.steps li::before{content:counter(b);width:34px;height:34px;border-radius:50%;background:var(--navy);color:var(--navy-ink);font-weight:700;display:grid;place-items:center;font-size:15px}
+.steps li>div>b{display:block;font-size:16px}
+.steps p{margin-top:3px;color:var(--muted);font-size:14.5px}
+.mid{display:inline-block;font:700 13.5px var(--f-mono);letter-spacing:1px;background:var(--paper);border:1px dashed var(--line2);border-radius:6px;padding:1px 7px;color:var(--ink)}
+.dls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:30px;box-shadow:var(--shadow-s);min-width:0}
+.card h3{font:800 22px/1.25 var(--f-disp);letter-spacing:-.015em;margin-bottom:4px}
+.card>p{color:var(--muted);font-size:14.5px;margin-bottom:20px}
+form.order{display:grid;gap:16px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.f{display:grid;gap:6px;min-width:0}
+.f span{font-size:13.5px;font-weight:600}
+.f span em{font-weight:400;color:var(--muted);font-style:normal}
+.f input,.f select,.f textarea{width:100%;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:11px 13px;font:15px var(--f-body);transition:border-color .15s,background .15s}
+.f textarea{min-height:80px;resize:vertical;font-family:var(--f-mono);font-size:14px}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--navy);background:var(--paper);outline:none}
+.midhelp{margin-top:-6px;font-size:14px;color:var(--muted)}
+.midhelp summary{cursor:pointer;color:var(--navy);font-weight:600;width:fit-content}
+.midhelp p{margin-top:8px}
+.err{color:var(--seal);font-size:14px}
+.err:empty{display:none}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:14px;font-variant-numeric:tabular-nums}
+.total b{font-size:24px;letter-spacing:-.01em}
+.secure{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;justify-content:center}
+.secure .ico{width:16px;height:16px}
+@media (max-width:980px){.buy{grid-template-columns:1fr}}
+@media (max-width:520px){.fg{grid-template-columns:1fr}.card{padding:22px}}
+.receipt{display:grid;gap:16px}
+.rgrid{display:grid;grid-template-columns:184px 1fr;gap:22px;align-items:start}
+.qr{width:184px;max-width:100%;aspect-ratio:1/1;border:1px solid var(--line);border-radius:12px;background:#fff;display:grid;place-items:center;text-align:center;color:#555;font-size:12.5px;padding:10px;overflow:hidden}
+.qr img{width:100%;height:100%;object-fit:contain}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0;font-size:14.5px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-weight:600;word-break:break-word;font-variant-numeric:tabular-nums}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.copied{color:var(--ok);font-size:13.5px;font-weight:600}
+@media (max-width:560px){.rgrid{grid-template-columns:1fr}}
+
+/* ---- Hỏi đáp ---- */
+.faqgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:56px;align-items:start}
+.faq{display:grid;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line);padding:18px 0}
+.faq summary{cursor:pointer;font-weight:700;font-size:16.5px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";width:12px;height:12px;flex:none;margin-top:7px;border-right:2px solid var(--navy);border-bottom:2px solid var(--navy);transform:rotate(45deg);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(-135deg);margin-top:11px}
+.faq p{color:var(--muted);margin-top:10px;font-size:15.5px;max-width:68ch}
+@media (max-width:900px){.faqgrid{grid-template-columns:1fr;gap:24px}}
+
+/* ---- Kêu gọi cuối ---- */
+.final{background:#1662d4;color:#fff;position:relative;overflow:hidden}
+.final::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.16) 1.2px,transparent 1.3px);background-size:22px 22px;mask-image:linear-gradient(90deg,transparent,#000 70%)}
+.final .wrap{position:relative;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;padding-block:64px}
+.final h2{font:800 clamp(26px,3vw,38px)/1.15 var(--f-disp);letter-spacing:-.025em;max-width:24ch}
+.final p{color:#dbe8fd;margin-top:8px}
+.final .acts{gap:12px}
+
+footer.foot{background:var(--paper);border-top:1px solid var(--line);padding-block:48px 28px;font-size:14px;color:var(--muted)}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.fcols b{display:block;color:var(--ink);margin-bottom:10px;font-size:14.5px}
+.fcols p{margin:5px 0}
+.fcols a{color:var(--muted);text-decoration:none}
+.fcols a:hover{color:var(--navy)}
+.fbottom{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px}
+.ph{background:var(--seal-soft);color:var(--seal);border-radius:4px;padding:0 5px;font-weight:600;font-size:.92em}
+@media (max-width:900px){.fcols{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.fcols{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></symbol>
+  <symbol id="i-abc" viewBox="0 0 24 24"><path d="M4 17l4-10 4 10M5.5 13.5h5M14 17V7h3.5a2.5 2.5 0 0 1 0 5H14h4a2.5 2.5 0 0 1 0 5z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h7M8 11h5"/></symbol>
+  <symbol id="i-word" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l1.5 6L10 10.5 11.5 15 13 9M16 9h2M16 12h2M16 15h2"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 13h8"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></symbol>
+  <symbol id="i-offline" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></symbol>
+  <symbol id="i-build" viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6M4 21h16"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="#top" aria-label="SLS Technology Solutions, về đầu trang"><img class="logo logo-light" src="assets/logo.png" alt="SLS Technology Solutions"><img class="logo logo-dark" src="assets/logo-dark.png" alt="SLS Technology Solutions"></a>
+    <nav class="menu" aria-label="Mục chính"><a href="#san-pham">Sản phẩm</a><a href="#quy-trinh">Quy trình</a><a href="#bang-gia">Bảng giá</a><a href="#hoi-dap">Hỏi đáp</a><a href="#lien-he">Liên hệ</a></nav>
+    <div class="top-cta"><a class="btn sm" href="#mua">Dùng thử</a><a class="btn primary sm" href="#mua">Mua ngay</a></div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="chip"><i>Mới</i>Hỗ trợ Hướng dẫn 05-HD/VPTW năm 2026</span>
+        <h1>Văn bản đúng thể thức.<br><span>Hồ sơ đúng quy&nbsp;trình.</span></h1>
+      </div>
+      <div>
+        <p class="lead">Bộ phần mềm văn phòng cho cơ quan, đơn vị: soạn và soát văn bản tự động, lập hồ sơ và nộp lưu đúng mẫu. Mở là dùng, không cài đặt, dữ liệu không rời khỏi máy.</p>
+        <div class="cta"><a class="btn primary" href="#mua">Dùng thử miễn phí</a><a class="btn" href="#bang-gia">Xem bảng giá</a></div>
+        <div class="specs">
+          <div><b>28</b><span>loại văn bản<br>hành chính</span></div>
+          <div><b>40</b><span>mẫu nội dung<br>soạn sẵn</span></div>
+          <div><b>0</b><span>bước cài đặt,<br>không cần mạng</span></div>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="window"><div class="bar"><i></i><i></i><i></i><span>SoanVanBan_ND30.html</span></div><img src="assets/vb.webp" alt="Phần mềm Soạn văn bản NĐ30: biểu mẫu bên trái, trang A4 xem trước bên phải" width="2560" height="1600" fetchpriority="high"></div>
+        <div class="check" aria-hidden="true">
+          <h4>Soát thể thức <em>Đã sửa tự động</em></h4>
+          <ul><li>Lề trên, dưới, trái, phải<b class="ok">20 · 20 · 30 · 15 mm</b></li><li>Phông chữ<b class="ok">Times New Roman</b></li><li>Quốc hiệu<b class="ok">cỡ 13, đậm</b></li><li>Chính tả<b class="ok">“sử lý” → “xử lý”</b></li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="basis">
+    <div class="wrap">
+      <small>Căn cứ áp dụng</small>
+      <ul>
+        <li>Nghị định 30/2020/NĐ-CP<span>Công tác văn thư · Phụ lục I–VI</span></li>
+        <li>Hướng dẫn 05-HD/VPTW<span>Thể thức văn bản của Đảng</span></li>
+        <li>Thông tư 10/2022/TT-BNV<span>Thời hạn bảo quản tài liệu</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="s">
+    <div class="wrap">
+      <div class="s-head"><span class="eyebrow">Tiết kiệm thời gian</span><h2 class="h2">Những việc văn thư vẫn phải làm tay mỗi ngày</h2></div>
+      <div class="compare" role="table" aria-label="So sánh cách làm thường ngày và khi dùng phần mềm">
+        <div class="row" role="row"><div role="columnheader">Công việc</div><div role="columnheader">Thường làm</div><div role="columnheader">Với phần mềm SLS</div></div>
+        <div class="row" role="row"><div class="task" role="cell">Trình bày văn bản</div><div class="before" role="cell">Căn lề, cỡ chữ, kẻ dòng dưới Quốc hiệu bằng tay</div><div class="after" role="cell">Điền nội dung, tải file Word đã đúng thể thức</div></div>
+        <div class="row" role="row"><div class="task" role="cell">Kiểm tra văn bản nhận được</div><div class="before" role="cell">Soi từng chỗ bằng mắt, dễ sót</div><div class="after" role="cell">Soát một lần cả thư mục, tự sửa, xem so sánh trước – sau, xuất báo cáo</div></div>
+        <div class="row" role="row"><div class="task" role="cell">File phông cũ TCVN3, VNI</div><div class="before" role="cell">Gõ lại hoặc dùng công cụ chuyển mã riêng</div><div class="after" role="cell">Tự nhận ra và chuyển sang Unicode khi soát</div></div>
+        <div class="row" role="row"><div class="task" role="cell">Mục lục văn bản trong hồ sơ</div><div class="before" role="cell">Gõ lại số, ký hiệu, ngày, trích yếu từng văn bản</div><div class="after" role="cell">Kéo thả tệp, thông tin được đọc tự động</div></div>
+        <div class="row" role="row"><div class="task" role="cell">Nộp lưu cuối năm</div><div class="before" role="cell">Lập mục lục, biên bản giao nhận từ đầu</div><div class="after" role="cell">Chọn hồ sơ, tải mục lục và biên bản đúng mẫu</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s prodwrap" id="san-pham">
+    <div class="wrap">
+      <div class="s-head"><span class="eyebrow">Sản phẩm</span><h2 class="h2">Hai phần mềm, một mã kích hoạt</h2><p class="sub">Dùng riêng từng phần mềm hoặc cả bộ. Mua trọn bộ, một mã kích hoạt mở được cả hai.</p></div>
+      <div class="tabs" role="tablist" aria-label="Chọn phần mềm">
+        <button role="tab" id="t-vb" aria-controls="p-vb" aria-selected="true">Soạn văn bản NĐ30</button>
+        <button role="tab" id="t-hs" aria-controls="p-hs" aria-selected="false">Lập hồ sơ &amp; Nộp lưu</button>
+      </div>
+      <div class="pane" id="p-vb" role="tabpanel" aria-labelledby="t-vb">
+        <div>
+          <h3>Soạn văn bản NĐ30</h3>
+          <p class="sub">Điền nội dung, phần mềm trình bày đúng thể thức và xuất file Word. Soát và sửa cả những văn bản có sẵn.</p>
+          <ul class="feats">
+            <li><span class="ic"><svg class="ico"><use href="#i-doc"/></svg></span><div><b>Văn bản hành chính và văn bản Đảng</b><p>28 loại theo NĐ 30, chế độ riêng theo HD 05-HD/VPTW, 40 mẫu nội dung soạn sẵn.</p></div></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-check"/></svg></span><div><b>Soát và sửa file Word</b><p>Lề, phông, cỡ chữ, viết hoa theo Phụ lục II, chuyển phông TCVN3/VNI. Soát nhiều file một lúc. Xem bản đã sửa và so sánh song song với bản gốc ngay trên màn hình.</p></div></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-abc"/></svg></span><div><b>Soát chính tả tiếng Việt</b><p>Bắt lỗi gõ sai, dấu đặt sai vị trí, từ hay viết sai, thống nhất kiểu dấu.</p></div></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-book"/></svg></span><div><b>Sổ văn bản đi</b><p>Tự lấy số tiếp theo, tìm kiếm, xuất Excel. Kèm tiện ích đọc số tiền thành chữ.</p></div></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-word"/></svg></span><div><b>Add-in trong Microsoft Word</b><p>Soát văn bản đang mở ngay trên thanh công cụ Word.</p></div></li>
+          </ul>
+        </div>
+        <figure><div class="window"><div class="bar"><i></i><i></i><i></i><span>Soạn văn bản · Quyết định</span></div><img src="assets/vb.webp" alt="Màn hình soạn Quyết định với bản xem trước trang A4" loading="lazy" width="2560" height="1600"></div><figcaption>Xem trước trang A4 ngay khi gõ, lề và cỡ chữ theo Phụ lục I.</figcaption></figure>
+      </div>
+      <div class="pane" id="p-hs" role="tabpanel" aria-labelledby="t-hs" hidden>
+        <div>
+          <h3>Lập hồ sơ &amp; Nộp lưu</h3>
+          <p class="sub">Công cụ cho từng chuyên viên lập hồ sơ công việc và nộp lưu theo Điều 28–31 NĐ 30, khâu mà nhiều phần mềm quản lý văn bản chưa làm.</p>
+          <ul class="feats">
+            <li><span class="ic"><svg class="ico"><use href="#i-list"/></svg></span><div><b>Danh mục hồ sơ đầu năm</b><p>Đề mục, số và ký hiệu hồ sơ tự đánh. Dán từ file cũ hoặc sao chép từ năm trước. Xuất Word theo Phụ lục V.</p></div></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-drop"/></svg></span><div><b>Kéo thả văn bản vào hồ sơ</b><p>Word, PDF, ảnh scan. Tự đọc số, ký hiệu, ngày, trích yếu, cơ quan ban hành, người ký, số trang.</p></div></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-folder"/></svg></span><div><b>Kết thúc hồ sơ</b><p>Soát bản trùng và thông tin thiếu. In Mục lục văn bản, Chứng từ kết thúc, Bìa hồ sơ.</p></div></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-box"/></svg></span><div><b>Nộp lưu vào Lưu trữ cơ quan</b><p>Tự tính hạn nộp. Xuất Mục lục hồ sơ nộp lưu, Biên bản giao nhận, gói hồ sơ điện tử theo Mã hồ sơ.</p></div></li>
+          </ul>
+        </div>
+        <figure><div class="window"><div class="bar"><i></i><i></i><i></i><span>Lập hồ sơ · 03.TH</span></div><img src="assets/hs.webp" alt="Màn hình lập hồ sơ với danh sách văn bản đã đọc số, ký hiệu, ngày" loading="lazy" width="2560" height="1600"></div><figcaption>Văn bản thiếu thông tin hoặc trùng được tô màu để kiểm tra lại.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="quy-trinh">
+    <div class="wrap">
+      <div class="s-head"><span class="eyebrow">Quy trình</span><h2 class="h2">Trọn vòng đời của một văn bản</h2></div>
+      <ol class="flow">
+        <li><b>Soạn</b><p>Chọn loại văn bản, điền nội dung, tải file Word đúng thể thức.</p><span class="law">Phụ lục I, II</span></li>
+        <li><b>Soát</b><p>Kiểm tra văn bản nhận được hoặc tự soạn, sửa lỗi trình bày và chính tả.</p><span class="law">Phụ lục I · HD 05</span></li>
+        <li><b>Lập hồ sơ</b><p>Gom văn bản vào hồ sơ theo Danh mục, kết thúc hồ sơ khi xong việc.</p><span class="law">Điều 28, 29</span></li>
+        <li><b>Nộp lưu</b><p>In Mục lục, Biên bản giao nhận, giao gói hồ sơ điện tử cho Lưu trữ.</p><span class="law">Điều 30, 31</span></li>
+      </ol>
+      <div class="why" style="margin-top:64px">
+        <div><svg class="ico ic"><use href="#i-offline"/></svg><b>Không cài đặt, không cần mạng</b><p>Mỗi phần mềm là một file, mở bằng Chrome, Edge hoặc Cốc Cốc. Dùng tốt cả ở nơi mạng yếu.</p></div>
+        <div><svg class="ico ic"><use href="#i-lock"/></svg><b>Dữ liệu ở lại trên máy</b><p>Văn bản được xử lý ngay trên máy người dùng, không gửi lên máy chủ nào.</p></div>
+        <div><svg class="ico ic"><use href="#i-scale"/></svg><b>Bám sát mẫu biểu</b><p>Theo các Phụ lục của Nghị định 30 và Hướng dẫn 05-HD/VPTW.</p></div>
+        <div><svg class="ico ic"><use href="#i-key"/></svg><b>Bản quyền theo từng máy</b><p>Mã kích hoạt gắn với từng máy, cấp theo năm hoặc vĩnh viễn.</p></div>
+        <div><svg class="ico ic"><use href="#i-build"/></svg><b>Gói riêng cho đơn vị</b><p>Điền sẵn tên cơ quan, nơi nhận, thông số trình bày dùng chung cho cả đơn vị.</p></div>
+        <div><svg class="ico ic"><use href="#i-chat"/></svg><b>Hỗ trợ trực tiếp</b><p>Hướng dẫn qua Zalo, điện thoại khi kích hoạt và trong quá trình dùng.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s pricing" id="bang-gia">
+    <div class="wrap">
+      <div class="s-head center"><span class="eyebrow">Bảng giá</span><h2 class="h2">Chọn gói phù hợp</h2><p class="sub">Giá tính cho mỗi máy sử dụng. Có hóa đơn điện tử cho cơ quan, đơn vị.</p></div>
+      <div class="prices" id="prices"></div>
+      <div class="vol" id="vol"></div>
+      <div class="org"><div><b>Gói cơ quan: trọn bộ cho tối đa 20 máy</b><p>Gói cài đặt điền sẵn tên đơn vị, nơi nhận, thông số trình bày; hướng dẫn sử dụng cho cán bộ. Trên 20 máy, liên hệ để có báo giá.</p></div><div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap"><div class="oprice" id="orgPrice"></div><a class="btn primary" href="#mua" data-plan="org">Chọn gói cơ quan</a></div></div>
+      <p class="sub" id="priceNote" style="margin-top:16px;font-size:14px"></p>
+    </div>
+  </section>
+
+  <section class="s" id="mua">
+    <div class="wrap buy">
+      <div>
+        <span class="eyebrow">Dùng thử và mua hàng</span>
+        <h2 class="h2" style="margin-top:12px">Nhận mã kích hoạt trong ngày</h2>
+        <ol class="steps">
+          <li><div><b>Tải phần mềm, mở trên máy cần dùng</b><p>Màn hình đầu tiên hiện Mã máy, ví dụ <span class="mid">ABCDE-FGH23</span>. Sao chép mã này.</p><div class="dls" id="dl"></div></div></li>
+          <li><div><b>Gửi đơn đặt mua hoặc dùng thử</b><p>Chọn gói, dán Mã máy nếu đã có. Chưa có Mã máy vẫn đặt được, gửi bổ sung sau.</p></div></li>
+          <li><div><b>Chuyển khoản theo mã QR</b><p>Số tiền và nội dung chuyển khoản được điền sẵn theo mã đơn hàng.</p></div></li>
+          <li><div><b>Nhận mã qua Zalo hoặc email</b><p>Dán mã vào phần mềm và bấm Kích hoạt.</p></div></li>
+        </ol>
+      </div>
+      <div class="card">
+        <div id="orderBox">
+          <h3>Thông tin đặt mua</h3>
+          <p>Điền thông tin, hệ thống tạo mã đơn hàng và mã QR thanh toán.</p>
+          <form class="order" id="order" novalidate>
+            <div class="fg">
+              <label class="f"><span>Họ và tên</span><input id="oName" autocomplete="name" required></label>
+              <label class="f"><span>Số điện thoại / Zalo</span><input id="oPhone" inputmode="tel" autocomplete="tel" required></label>
+            </div>
+            <label class="f"><span>Cơ quan, đơn vị</span><input id="oOrg" autocomplete="organization"></label>
+            <div class="fg">
+              <label class="f"><span>Email <em>(nhận mã, hóa đơn)</em></span><input id="oEmail" type="email" autocomplete="email"></label>
+              <label class="f"><span>Mã số thuế <em>(nếu cần hóa đơn)</em></span><input id="oTax" inputmode="numeric"></label>
+            </div>
+            <div class="fg">
+              <label class="f"><span>Gói</span><select id="oPlan"></select></label>
+              <label class="f"><span>Số máy</span><input id="oQty" type="number" min="1" max="500" value="1"></label>
+            </div>
+            <label class="f"><span>Mã máy <em>(không bắt buộc, mỗi máy một dòng)</em></span><textarea id="oMids" placeholder="ABCDE-FGH23 — để trống nếu chưa có" spellcheck="false" aria-describedby="midHelp"></textarea></label>
+            <details class="midhelp" id="midHelp"><summary>Mã máy là gì, lấy ở đâu?</summary><p>Mã máy gồm 10 ký tự dạng <span class="mid">ABCDE-FGH23</span>, hiện ở màn hình đầu tiên khi mở phần mềm trên máy cần dùng. Mỗi máy có một mã riêng để cấp bản quyền đúng máy đó.</p><p>Chưa tải phần mềm? Cứ tạo đơn hàng và thanh toán trước. Sau đó tải phần mềm, mở lên, gửi Mã máy qua Zalo hoặc email kèm mã đơn hàng để nhận mã kích hoạt.</p><div class="dls" id="dl2"></div></details>
+            <div class="err" id="oErr" role="alert"></div>
+            <div class="disc" id="oDisc"></div>
+            <div class="total"><span>Thành tiền</span><b id="oTotal">—</b></div>
+            <button class="btn primary" type="submit">Tạo đơn hàng</button>
+            <div class="secure"><svg class="ico"><use href="#i-lock"/></svg>Thông tin chỉ dùng để cấp mã kích hoạt và xuất hóa đơn.</div>
+          </form>
+        </div>
+        <div class="receipt" id="receipt" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s prodwrap" id="hoi-dap">
+    <div class="wrap faqgrid">
+      <div class="s-head" style="margin:0"><span class="eyebrow">Hỏi đáp</span><h2 class="h2">Câu hỏi thường gặp</h2><p class="sub">Chưa thấy câu trả lời? Liên hệ trực tiếp qua Zalo hoặc email ở cuối trang.</p></div>
+      <div class="faq">
+        <details open><summary>Có cần cài đặt hay kết nối mạng không?</summary><p>Không. Mỗi phần mềm là một file .html, mở bằng Chrome, Edge hoặc Cốc Cốc là dùng được. Chỉ cần mạng khi tải phần mềm và gửi Mã máy để nhận mã kích hoạt.</p></details>
+        <details><summary>Văn bản của cơ quan có bị gửi đi đâu không?</summary><p>Không. Mọi xử lý diễn ra trên máy người dùng. Phần mềm không có máy chủ và không gửi nội dung văn bản ra ngoài.</p></details>
+        <details><summary>Một mã dùng được cho mấy máy?</summary><p>Mỗi mã gắn với một máy và một trình duyệt. Khi đổi máy, cài lại Windows hoặc xóa dữ liệu trình duyệt, liên hệ để được cấp lại. Mã còn hạn được cấp lại miễn phí.</p></details>
+        <details><summary>Dữ liệu hồ sơ lưu ở đâu, có bị mất không?</summary><p>Dữ liệu lưu trong trình duyệt của máy đang dùng. Phần mềm có nút Sao lưu toàn bộ ra file .zip và nhắc sao lưu định kỳ. Nên sao lưu hằng tuần ra USB hoặc ổ khác.</p></details>
+        <details><summary>Có hỗ trợ văn bản của Đảng không?</summary><p>Có. Phần mềm Soạn văn bản có chế độ riêng theo Hướng dẫn 05-HD/VPTW năm 2026 và tự nhận ra văn bản Đảng khi soát.</p></details>
+        <details><summary>Có xuất hóa đơn cho cơ quan nhà nước không?</summary><p>Có. Ghi mã số thuế và email trong đơn hàng, hóa đơn điện tử được gửi sau khi nhận thanh toán.</p></details>
+        <details><summary>Có thay thế phần mềm quản lý văn bản đang dùng không?</summary><p>Không. Phần mềm dùng song song: giúp soạn văn bản đúng thể thức trước khi đưa lên hệ thống, và giúp lập hồ sơ, nộp lưu đúng mẫu.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <div><h2>Dùng thử 15 ngày, đủ tính năng cả hai phần mềm</h2><p>Gửi Mã máy, nhận mã dùng thử trong ngày làm việc.</p></div>
+      <div class="acts"><a class="btn light" href="#mua">Đăng ký dùng thử</a><a class="btn ghost-d" href="#bang-gia">Xem bảng giá</a></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot" id="lien-he">
+  <div class="wrap">
+    <div class="fcols">
+      <div><img class="logo logo-light" src="assets/logo.png" alt="SLS Technology Solutions" style="margin-bottom:14px"><img class="logo logo-dark" src="assets/logo-dark.png" alt="" style="margin-bottom:14px"><p><b id="fName" style="display:inline;margin:0">SLS Company</b></p><p id="fAddr"></p><p id="fTax"></p></div>
+      <div><b>Liên hệ</b><p id="fPhone"></p><p id="fEmail"></p></div>
+      <div><b>Sản phẩm</b><p><a href="#san-pham">Soạn văn bản NĐ30</a></p><p><a href="#san-pham">Lập hồ sơ &amp; Nộp lưu</a></p><p><a href="#bang-gia">Bảng giá</a></p></div>
+      <div><b>Hỗ trợ</b><p><a href="#mua">Hướng dẫn kích hoạt</a></p><p><a href="#hoi-dap">Câu hỏi thường gặp</a></p></div>
+    </div>
+    <div class="fbottom"><span>© <span id="yr"></span> SLS Company. Bảo lưu mọi quyền.</span><span>Phần mềm hỗ trợ trình bày đúng thể thức; nội dung và thẩm quyền ban hành do người sử dụng chịu trách nhiệm.</span></div>
+  </div>
+</footer>
+
+<script>
+/* ====== CẤU HÌNH — sửa các dòng dưới đây, không cần sửa phần khác ====== */
+var CONFIG = {
+  company: { name: "SLS Company", address: "", taxCode: "" },
+  phone: "0368233170",  /* dùng cho Zalo và gọi điện */
+  email: "slscompanyvietnam@gmail.com",
+  bank: { id: "BIDV", account: "2601244736", holder: "DOAN VAN HOANG", staticQR: "assets/qr-static.png" },  /* id theo VietQR, VD: "VCB", "BIDV", "MB", "TCB"; holder viết HOA không dấu */
+  downloads: { soanVanBan: "downloads/PhanMem_SoanVanBan_ND30.zip", lapHoSo: "downloads/PhanMem_LapHoSo_ND30.zip" },
+  /* Ưu đãi ra mắt: pct = % giảm, until = ngày cuối (yyyy-mm-dd). Tắt ưu đãi: đặt pct: 0 */
+  promo: { pct: 30, until: "2026-12-31", label: "Ưu đãi ra mắt" },
+  /* Giảm theo số máy (không cộng dồn với ưu đãi ra mắt; áp dụng mức giảm lớn hơn) */
+  volume: [{ min: 10, pct: 20 }, { min: 5, pct: 10 }],
+  /* price = 0 thì hiện “Liên hệ”. unit: chữ hiện sau giá */
+  plans: [
+    { id: "trial", name: "Dùng thử 15 ngày", price: 0, free: true, unit: "", items: [], hidden: true },
+    { id: "vb", name: "Soạn văn bản NĐ30", desc: "Cho người soạn, soát văn bản", price: 299000, unit: "/máy/năm", items: ["Văn bản hành chính và văn bản Đảng", "Soát, sửa file Word và chính tả", "Sổ văn bản đi, Add-in Word"] },
+    { id: "combo", name: "Trọn bộ văn phòng", desc: "Cho văn thư, chuyên viên · tiết kiệm 23%", price: 499000, unit: "/máy/năm", best: true, items: ["Toàn bộ Soạn văn bản NĐ30", "Toàn bộ Lập hồ sơ & Nộp lưu", "Một mã kích hoạt cho cả hai", "Ưu tiên hỗ trợ"] },
+    { id: "hs", name: "Lập hồ sơ & Nộp lưu", desc: "Cho người lập hồ sơ công việc", price: 349000, unit: "/máy/năm", items: ["Danh mục hồ sơ, lập hồ sơ", "Mục lục, chứng từ, bìa hồ sơ", "Mục lục và biên bản nộp lưu"] },
+    { id: "org", name: "Gói cơ quan (trọn bộ, tối đa 20 máy)", price: 4990000, unit: "/năm", flat: true, maxQty: 20, items: [], hidden: true }
+  ]
+};
+/* ====== HẾT PHẦN CẤU HÌNH ====== */
+(function () {
+  "use strict";
+  var $ = function (s) { return document.querySelector(s); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function money(n) { return n.toLocaleString("vi-VN") + " đ"; }
+  function ph(text) { return '<span class="ph">' + esc(text) + "</span>"; }
+  var plans = CONFIG.plans, TICK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function planById(id) { for (var i = 0; i < plans.length; i++) if (plans[i].id === id) return plans[i]; return plans[0]; }
+
+  /* Tab sản phẩm */
+  var tabs = document.querySelectorAll('[role="tab"]');
+  function pick(t) { tabs.forEach(function (x) { var on = x === t; x.setAttribute("aria-selected", on ? "true" : "false"); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute("aria-controls")).hidden = !on; }); }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { pick(t); });
+    t.addEventListener("keydown", function (e) { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { var n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length]; pick(n); n.focus(); } });
+  });
+
+  /* Bảng giá */
+  function today() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  var PR = CONFIG.promo || {}, promoOn = PR.pct > 0 && (!PR.until || today() <= PR.until);
+  function vn(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ""); return m ? m[3] + "/" + m[2] + "/" + m[1] : ""; }
+  function round(n) { return Math.round(n / 1000) * 1000; }
+  function promoPrice(p) { return promoOn ? round(p.price * (1 - PR.pct / 100)) : p.price; }
+  /* trả về {base, pct, why, total} */
+  function quote(p, n) {
+    if (p.free || !p.price) return { base: 0, pct: 0, total: 0 };
+    var base = p.flat ? p.price : p.price * n, pct = 0, why = "";
+    if (promoOn) { pct = PR.pct; why = PR.label + " −" + PR.pct + "%"; }
+    if (!p.flat) (CONFIG.volume || []).some(function (v) { if (n >= v.min) { if (v.pct > pct) { pct = v.pct; why = "Giảm " + v.pct + "% khi mua từ " + v.min + " máy"; } return true; } });
+    return { base: base, pct: pct, why: why, total: p.flat ? round(base * (1 - pct / 100)) : round(p.price * (1 - pct / 100)) * n };
+  }
+  $("#prices").innerHTML = plans.filter(function (p) { return !p.hidden; }).map(function (p) {
+    var priceHtml = !p.price ? "Liên hệ" : money(promoPrice(p)) + " <small>" + esc(p.unit) + "</small>";
+    var was = p.price && promoOn ? '<div class="was"><s>' + money(p.price) + "</s><em>−" + PR.pct + "%</em></div>" : "";
+    return '<div class="plan' + (p.best ? " best" : "") + '">' + (p.best ? '<span class="ribbon">Được chọn nhiều nhất</span>' : "") + "<div><h3>" + esc(p.name) + '</h3></div><p class="desc">' + esc(p.desc || "") + "</p>" + was + '<div class="price">' + priceHtml + "</div><ul>" + p.items.map(function (x) { return "<li>" + TICK + "<span>" + esc(x) + "</span></li>"; }).join("") + '</ul><a class="btn' + (p.best ? " primary" : "") + '" href="#mua" data-plan="' + p.id + '">Chọn gói này</a></div>';
+  }).join("");
+  var org = planById("org");
+  $("#orgPrice").innerHTML = org && org.id === "org" ? (promoOn ? "<s>" + money(org.price) + "</s>" : "") + money(promoPrice(org)) + " <small>" + esc(org.unit) + "</small>" : "";
+  $("#vol").innerHTML = (CONFIG.volume || []).slice().sort(function (a, b) { return a.min - b.min; }).map(function (v) { return "<span>Từ <b>" + v.min + " máy</b>: giảm <b>" + v.pct + "%</b></span>"; }).join("<span>·</span>") + (promoOn ? "<span>·</span><span>" + esc(PR.label) + " <b>−" + PR.pct + "%</b> đến hết " + vn(PR.until) + " (không cộng dồn, áp dụng mức giảm cao hơn)</span>" : "");
+  $("#priceNote").textContent = plans.some(function (p) { return !p.hidden && !p.price; }) ? "Giá đang được cập nhật. Gửi đơn hàng hoặc liên hệ để nhận báo giá." : "Giá tính cho mỗi máy, sử dụng 12 tháng kể từ ngày kích hoạt. Gia hạn theo giá niêm yết tại thời điểm gia hạn.";
+  $("#oPlan").innerHTML = plans.map(function (p) { return '<option value="' + p.id + '"' + (p.best ? " selected" : "") + ">" + esc(p.name) + (p.price ? " — " + money(promoPrice(p)) + p.unit : p.free ? " — miễn phí" : "") + "</option>"; }).join("");
+  document.addEventListener("click", function (e) { var a = e.target.closest("[data-plan]"); if (a) { $("#oPlan").value = a.dataset.plan; calc(); } });
+  document.querySelectorAll('a[href="#mua"]').forEach(function (a) { if (/thử/i.test(a.textContent)) a.addEventListener("click", function () { $("#oPlan").value = "trial"; calc(); }); });
+
+  var dl = CONFIG.downloads;
+  var dlHtml = '<a class="btn sm" href="' + esc(dl.soanVanBan) + '"><svg class="ico" style="width:16px;height:16px"><use href="#i-drop"/></svg>Soạn văn bản</a><a class="btn sm" href="' + esc(dl.lapHoSo) + '"><svg class="ico" style="width:16px;height:16px"><use href="#i-drop"/></svg>Lập hồ sơ</a>';
+  $("#dl").innerHTML = dlHtml; $("#dl2").innerHTML = dlHtml;
+
+  var C = CONFIG.company;
+  $("#fName").textContent = C.name;
+  if (C.address) $("#fAddr").textContent = C.address; else $("#fAddr").hidden = true;
+  if (C.taxCode) $("#fTax").textContent = "Mã số thuế: " + C.taxCode; else $("#fTax").hidden = true;
+  $("#fPhone").innerHTML = "Điện thoại / Zalo: " + (CONFIG.phone ? '<a href="tel:' + esc(CONFIG.phone) + '">' + esc(CONFIG.phone) + "</a>" : ph("cập nhật"));
+  $("#fEmail").innerHTML = "Email: " + (CONFIG.email ? '<a href="mailto:' + esc(CONFIG.email) + '">' + esc(CONFIG.email) + "</a>" : ph("cập nhật"));
+  $("#yr").textContent = new Date().getFullYear();
+
+  function qty() { var n = parseInt($("#oQty").value, 10); return n > 0 ? n : 1; }
+  function calc() {
+    var p = planById($("#oPlan").value), n = qty(), q = quote(p, n);
+    $("#oTotal").textContent = p.free ? "Miễn phí" : p.price ? money(q.total) : "Báo giá sau";
+    $("#oDisc").innerHTML = q.pct ? "<span>" + esc(q.why) + "</span><span>−" + money(q.base - q.total) + "</span>" : "";
+  }
+  $("#oPlan").addEventListener("change", calc); $("#oQty").addEventListener("input", calc); calc();
+
+  function normMid(s) { var v = s.toUpperCase().replace(/[^A-Z0-9]/g, ""); return v.length === 10 ? v.slice(0, 5) + "-" + v.slice(5) : null; }
+  function orderCode() { var d = new Date(), r = Math.random().toString(36).slice(2, 6).toUpperCase(); return "SLS" + String(d.getFullYear()).slice(2) + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + r; }
+
+  $("#order").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = $("#oName").value.trim(), phone = $("#oPhone").value.trim(), lines = $("#oMids").value.split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean);
+    var mids = lines.map(normMid), bad = lines.filter(function (x, i) { return !mids[i]; });
+    var err = !name ? "Nhập họ và tên." : !/^[0-9+ .]{9,15}$/.test(phone) ? "Số điện thoại chưa đúng." : bad.length ? "Mã máy không đúng dạng: " + bad.join(", ") : "";
+    $("#oErr").textContent = err; if (err) return;
+    var p = planById($("#oPlan").value), n = Math.max(qty(), mids.length), later = mids.length < n;
+    if (p.maxQty && n > p.maxQty) { $("#oErr").textContent = "Gói này dùng cho tối đa " + p.maxQty + " máy. Trên " + p.maxQty + " máy, vui lòng liên hệ để có báo giá."; return; }
+    var q = quote(p, n), total = q.total, code = orderCode();
+    var b = CONFIG.bank, qr;
+    if (!p.free && total && b.id && b.account) qr = '<img alt="Mã QR chuyển khoản ' + money(total) + '" src="https://img.vietqr.io/image/' + encodeURIComponent(b.id) + "-" + encodeURIComponent(b.account) + "-compact2.png?amount=" + total + "&addInfo=" + encodeURIComponent(code) + (b.holder ? "&accountName=" + encodeURIComponent(b.holder) : "") + '"' + (b.staticQR ? ' onerror="this.onerror=null;this.src=\'' + esc(b.staticQR) + '\';this.title=\'Mã QR tài khoản: nhập số tiền và nội dung chuyển khoản theo đơn hàng\'"' : "") + '>';
+    else qr = p.free ? "Gói dùng thử không cần thanh toán." : "Mã QR sẽ hiện khi bảng giá và tài khoản ngân hàng được cập nhật.";
+    var text = "ĐƠN HÀNG " + code + "\nHọ tên: " + name + "\nĐiện thoại: " + phone + "\nĐơn vị: " + $("#oOrg").value.trim() + "\nEmail: " + $("#oEmail").value.trim() + "\nMã số thuế: " + $("#oTax").value.trim() + "\nGói: " + p.name + " × " + n + " máy" + (q.pct ? "\nGiá gốc: " + money(q.base) + " (" + q.why + ")" : "") + (total ? "\nThành tiền: " + money(total) : "") + "\nMã máy:\n" + (mids.length ? mids.join("\n") : "(chưa có)") + (later ? "\n→ Sẽ gửi bổ sung " + (n - mids.length) + " Mã máy sau khi cài phần mềm." : "");
+    var r = $("#receipt");
+    r.innerHTML = '<div><span class="eyebrow">Đã tạo đơn hàng</span><h3 style="margin-top:6px">' + esc(code) + '</h3></div><div class="rgrid"><div class="qr">' + qr + '</div><dl class="kv"><dt>Gói</dt><dd>' + esc(p.name) + " × " + n + " máy</dd><dt>Số tiền</dt><dd>" + (p.free ? "Miễn phí" : total ? money(total) + (q.pct ? ' <span style="color:var(--ok);font-weight:500">(' + esc(q.why) + ")</span>" : "") : "Báo giá sau") + "</dd>" + (b.account ? "<dt>Ngân hàng</dt><dd>" + esc(b.id) + "</dd><dt>Số tài khoản</dt><dd>" + esc(b.account) + "</dd>" + (b.holder ? "<dt>Chủ tài khoản</dt><dd>" + esc(b.holder) + "</dd>" : "") : "") + "<dt>Nội dung CK</dt><dd>" + esc(code) + "</dd><dt>Mã máy</dt><dd>" + (mids.length ? esc(mids.join(", ")) : "Gửi sau") + (later && mids.length ? " <span style=\"color:var(--muted);font-weight:500\">(còn " + (n - mids.length) + " máy gửi sau)</span>" : "") + '</dd></dl></div><p style="color:var(--muted);font-size:14.5px">Gửi nội dung đơn hàng dưới đây cho SLS Company qua Zalo hoặc email' + (CONFIG.phone ? " (" + esc(CONFIG.phone) + ")" : "") + ". Mã kích hoạt được gửi lại sau khi xác nhận" + (p.free ? "" : " thanh toán") + "." + (later ? " <b>Chưa có Mã máy:</b> tải phần mềm ở bước 1, mở trên máy cần dùng rồi gửi Mã máy kèm mã đơn hàng " + esc(code) + " để nhận mã kích hoạt." : "") + '</p><label class="f"><span>Nội dung đơn hàng</span><textarea id="rText" readonly rows="6">' + esc(text) + '</textarea></label><div class="acts"><button class="btn primary sm" type="button" id="rCopy">Sao chép nội dung</button>' + (CONFIG.phone ? '<a class="btn sm" href="https://zalo.me/' + esc(CONFIG.phone.replace(/\D/g, "")) + '" target="_blank" rel="noopener">Mở Zalo</a>' : "") + (CONFIG.email ? '<a class="btn sm" href="mailto:' + esc(CONFIG.email) + "?subject=" + encodeURIComponent("Đơn hàng " + code) + "&body=" + encodeURIComponent(text) + '">Gửi email</a>' : "") + '<button class="btn sm" type="button" id="rBack">Sửa đơn</button><span class="copied" id="rOk" aria-live="polite"></span></div>';
+    $("#orderBox").hidden = true; r.hidden = false; r.scrollIntoView({ block: "nearest" });
+    $("#rCopy").onclick = function () {
+      var t = $("#rText"), fb = function () { t.select(); $("#rOk").textContent = "Nhấn Ctrl+C để sao chép"; };
+      try { navigator.clipboard.writeText(text).then(function () { $("#rOk").textContent = "Đã sao chép"; }, fb); } catch (x) { fb(); }
+    };
+    $("#rBack").onclick = function () { r.hidden = true; $("#orderBox").hidden = false; };
+  });
+})();
+</script>
+
+</body>
+</html>
